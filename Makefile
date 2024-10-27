@@ -14,17 +14,14 @@ clean:
 	rm -f testsymtablelist testsymtablehash *.o
 
 # Dependency Rules for file targets
-testsymtablelist: testsymtablelist.o symtablelist.o
-	$(CC) $(CFLAGS) testsymtablelist.o symtablelist.o -o testsymtablelist
+testsymtablelist: testsymtable.o symtablelist.o
+	$(CC) $(CFLAGS) testsymtable.o symtablelist.o -o testsymtablelist
 
-testsymtablehash: testsymtablehash.o symtablehash.O
-	$(CC) $(CFLAGS) testsymtablehash.o symtablehash.o -o testsymtablehash
+testsymtablehash: testsymtablehash.o symtablehash.o
+	$(CC) $(CFLAGS) testsymtable.o symtablehash.o -o testsymtablehash
 
-testsymtablelist.o: testsymtablelist.c symtablelist.h 
-	$(CC) $(CFLAGS) -c testsymtablelist.c
-
-testsymtablehash.o: testsymtablehash.c symtablehash.h
-	$(CC) $(CFLAGS) -c testsymtablehash.c
+testsymtable.o: testsymtable.c symtable.h 
+	$(CC) $(CFLAGS) -c testsymtable.c
 
 symtablelist.o: symtablelist.c symtablelist.h
 	$(CC) $(CFLAGS) -c symtablelist.c
