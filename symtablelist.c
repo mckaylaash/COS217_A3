@@ -7,7 +7,7 @@
 
 
 struct Node {
-  char *key; /* defensive copy of key (string) */ 
+  const char *key; /* defensive copy of key (string) */ 
   void *value; /* void pointer to a value (generic) */
   struct Node *next; /* pointer to next node in list */
 };
