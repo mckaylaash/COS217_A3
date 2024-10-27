@@ -82,7 +82,7 @@ const void *pvValue) {
   assert (pcKey != NULL);
   assert (pvValue != NULL);
 
-  for (kv = oSymTable->first; kv != NULL; kv->next) {
+  for (kv = oSymTable->first; kv != NULL; kv = kv->next) {
     if (strcmp(kv->key, pcKey) == 0) {
       oldValue = kv->value;
       kv->value = pvValue;
