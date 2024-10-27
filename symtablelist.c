@@ -1,9 +1,13 @@
 #include "symtable.h"
 #include <stdlib.h> /* for malloc, calloc, free */
 #include <stdio.h> /* for printf */
+#include <string.h>
+#include <assert.h> /* for assert */
+
+
 
 struct Node {
-  const char *key; /* defensive copy of key (string) */ 
+  char *key; /* defensive copy of key (string) */ 
   void *value; /* void pointer to a value (generic) */
   struct Node *next; /* pointer to next node in list */
 };
@@ -19,7 +23,7 @@ SymTable_T SymTable_new(void) {
     /* declared SymTable_T as a pointer to SymTable in the header file. */
   SymTable_T oSymTable; /* oSymTable is now a pointer to SymTable. */
   oSymTable = calloc(1, sizeof(*oSymTable)); 
-  if (oSymTable == NULL) cry(); return NULL;
+  if (oSymTable == NULL) return NULL;
   oSymTable->numNodes = 0;
   return oSymTable;
  }    
