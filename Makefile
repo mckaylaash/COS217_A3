@@ -2,9 +2,9 @@
 CC = gcc217
 # CC = gcc217m
 CFLAGS =
-# CFLAGS = -g
-# CFLAGS = -D NDEBUG
-# CFLAGS = -D NDEBUG -O
+# CFLAGS =-g
+# CFLAGS =-D NDEBUG
+# CFLAGS =-D NDEBUG -O
 
 # Dependency Rules for Non-File Targets
 all: testsymtablelist testsymtablehash
@@ -17,7 +17,7 @@ clean:
 testsymtablelist: testsymtable.o symtablelist.o
 	$(CC) $(CFLAGS) testsymtable.o symtablelist.o -o testsymtablelist
 
-testsymtablehash: testsymtablehash.o symtablehash.o
+testsymtablehash: testsymtable.o symtablehash.o
 	$(CC) $(CFLAGS) testsymtable.o symtablehash.o -o testsymtablehash
 
 testsymtable.o: testsymtable.c symtable.h 
