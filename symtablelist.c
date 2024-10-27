@@ -85,7 +85,7 @@ const void *pvValue) {
   for (kv = oSymTable->first; kv != NULL; kv = kv->next) {
     if (strcmp(kv->key, pcKey) == 0) {
       oldValue = kv->value;
-      kv->value = pvValue;
+      kv->value = (void *)pvValue;
       return oldValue;
     }
   }
@@ -98,7 +98,7 @@ int SymTable_contains(SymTable_T oSymTable, const char *pcKey) {
 	assert (oSymTable != NULL);
   assert (pcKey != NULL);
 
-  for (kv = oSymTable->first; kv != NULL; kv->next) {
+  for (kv = oSymTable->first; kv != NULL; kv = kv->next) {
     if (strcmp(kv->key, pcKey) == 0) return 1;
   }
   return 0;
@@ -110,7 +110,7 @@ void *SymTable_get(SymTable_T oSymTable, const char *pcKey) {
 	assert (oSymTable != NULL);
   assert (pcKey != NULL);
 
-  for (kv = oSymTable->first; kv != NULL; kv->next) {
+  for (kv = oSymTable->first; kv != NULL; kv = kv->next) {
     if (strcmp(kv->key, pcKey) == 0) return kv->value;
   }
   return NULL;
@@ -126,7 +126,7 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey) {
 	assert (oSymTable != NULL);
   assert (pcKey != NULL);
 
-  for (kv = oSymTable->first; kv != NULL; kv->next) {
+  for (kv = oSymTable->first; kv != NULL; kv = kv->next) {
     if (strcmp(kv->key, pcKey) == 0) {
       oldValue = kv->value;
       free(kv);
