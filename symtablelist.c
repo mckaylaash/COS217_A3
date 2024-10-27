@@ -66,7 +66,7 @@ const void *pvValue) {
     return 0;
   }
   strcpy(newNode->key, pcKey); 
-  newNode->value = pvValue; /* assign given value to new node */
+  newNode->value = (void *)pvValue; /* assign given value to new node */
   newNode->next = oSymTable->first; /* bindings are placed in front */
   oSymTable->first = newNode; /* first node becomes the new node */
 
