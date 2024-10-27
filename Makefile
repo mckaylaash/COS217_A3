@@ -23,7 +23,7 @@ testsymtablehash: testsymtable.o symtablehash.o
 testsymtable.o: testsymtable.c symtable.h 
 	$(CC) $(CFLAGS) -c testsymtable.c
 
-symtablelist.o: symtablelist.c symtablelist.h
+symtablelist.o: symtablelist.c symtable.h
 	$(CC) $(CFLAGS) -c symtablelist.c
 
 symtablehash.o: symtablehash.c symtablehash.h
