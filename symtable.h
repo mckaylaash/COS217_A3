@@ -4,6 +4,7 @@
 
 SymTable Abstract Data Type Interface                                               */
 /*--------------------------------------------------------------------*/
+#include <stddef.h>
 #ifndef SYMTABLE_H
 #define SYMTABLE_H
 
