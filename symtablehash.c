@@ -69,8 +69,7 @@ void rehash(SymTable_T oSymTable, size_t uBucketCount) {
    /* exit function if allocation failure */
    if (newBuckets == NULL) return; 
 
-
-   for (i = 0; i < auBucketCounts[oSymTable->numBuckets]; i++) {
+   for (i = 0; i < uBucketCount; i++) {
       binding = oSymTable->buckets[i];
       while (binding != NULL) {
          /* Store the hash code */
@@ -90,7 +89,6 @@ void rehash(SymTable_T oSymTable, size_t uBucketCount) {
       }
    }
    oSymTable->buckets = newBuckets;
-   oSymTable->numBuckets++;
 }
 
 SymTable_T SymTable_new(void) {
@@ -120,7 +118,7 @@ void SymTable_free(SymTable_T oSymTable) {
 
    assert (oSymTable != NULL);
 
-   for (bucket = 0; bucket < oSymTable->numBuckets; bucket++) {
+   for (bucket = 0; bucket < auBucketCounts[oSymTable->numBuckets]; bucket++) {
       binding = oSymTable->buckets[bucket];
       while (binding != NULL) {
          nextbinding = binding->next;
@@ -142,7 +140,7 @@ int SymTable_put(SymTable_T oSymTable, const char *pcKey,
   const void *pvValue) {
    size_t bucket;
    struct Node *newNode;
-   size_t currentBucket;
+   size_t currentBucketIndex;
 
    assert (oSymTable != NULL);
    assert (pcKey != NULL);
@@ -150,12 +148,12 @@ int SymTable_put(SymTable_T oSymTable, const char *pcKey,
    if (SymTable_contains(oSymTable, pcKey) == 1) return 0;
 
    /* Hash Table Expansion */
-   currentBucket = oSymTable->numBuckets;
+   currentBucketIndex = oSymTable->numBuckets;
    /* checks if the number of nodes equals or exceeds the current number 
    of buckets. if so, proceeds with execution. */
-   if (oSymTable->numNodes >= auBucketCounts[currentBucket]) {
+   if (oSymTable->numNodes >= auBucketCounts[currentBucketIndex]) {
       /* make sure we are not at maximum number of buckets (65521) */
-      if (currentBucket < (numBucketIncrements - 1)) { 
+      if (currentBucketIndex < (numBucketIncrements - 1)) { 
         /* move to the next element in the array */
         oSymTable->numBuckets++; 
         rehash(oSymTable, auBucketCounts[oSymTable->numBuckets]);
