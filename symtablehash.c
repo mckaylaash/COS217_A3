@@ -4,23 +4,31 @@
 #include <string.h>
 #include <assert.h> /* for assert */
 
+/* An object that stores the key value pairs in the SymTable.*/
 struct Node {
-    char *key; /* Pointer to a key (string) */ 
-    void *value; /* Void pointer to a value (generic) */
-    struct Node *next; /* Pointer to next node in list */
+   /* Pointer to a key (string) */ 
+    char *key; 
+   /* Void pointer to a value (generic) */
+    const void *value; 
+   /* Pointer to next node in list */
+    struct Node *next;
 };
 
+/* A Hash Table implementation of a Symbol Table containing a 
+struct Node **buckets, size_t numBuckets, and size_t numNodes. */
 struct SymTable { /* manager */
-   /*  to struct Node *buckets[] where buckets is an array full of 
-   pointers to nodes */
-    struct Node **buckets; /* Pointer to (pointer to a node) */
-    size_t numBuckets; /* Number of buckets in the hash table */
-    size_t numNodes; /* Number of key-value pairs in table*/
+   /*  Buckets is an array full of pointers to nodes */
+    struct Node **buckets; 
+    /* Number of buckets in the hash table */
+    size_t numBuckets; 
+    /* Number of key-value pairs in table*/
+    size_t numNodes; 
 };
 
 /* Array of bucket counts used in hash table expansion  */
 static const size_t auBucketCounts[] = { 509, 1021, 2039, 4093, 8191, 
 16381, 32749, 65521};
+/* Stores the size of the auBucketCounts array. */
 static const size_t numBucketIncrements = sizeof(auBucketCounts) / 
                      sizeof(auBucketCounts[0]);
 
@@ -48,8 +56,8 @@ uBucketCount - 1. Does not return any values. */
 void rehash(SymTable_T oSymTable, size_t uBucketCount) {
    size_t i;
    size_t bucket;
-   struct Node *kv;
-   struct Node *nextkv;
+   struct Node *binding;
+   struct Node *nextbinding;
    struct Node **newBuckets;
 
    assert (oSymTable != NULL);
@@ -62,27 +70,26 @@ void rehash(SymTable_T oSymTable, size_t uBucketCount) {
    if (newBuckets == NULL) return; 
 
    for (i = 0; i < oSymTable->numBuckets; i++) {
-      kv = oSymTable->buckets[i];
-      while (kv != NULL) {
-         bucket = SymTable_hash(kv->key, uBucketCount); /* hash code */
-         nextkv = kv->next;
+      binding = oSymTable->buckets[i];
+      while (binding != NULL) {
+         bucket = SymTable_hash(binding->key, uBucketCount); /* hash code */
+         nextbinding = binding->next;
 
          /* bindings are placed in front */
-         kv->next = newBuckets[bucket];
+         binding->next = newBuckets[bucket];
 
          /* first node becomes the new node */
-         newBuckets[bucket] = kv; 
+         newBuckets[bucket] = binding; 
 
-         free(kv->key); /* free defensive copy first */
-         free(kv); /* free each node. */
+         free(binding->key); /* free defensive copy first */
+         free(binding); /* free each node. */
 
-         kv = nextkv;
+         binding = nextbinding;
       }
    }
    oSymTable->buckets = newBuckets;
    oSymTable->numBuckets = uBucketCount;
 }
-
 
 SymTable_T SymTable_new(void) {
     SymTable_T oSymTable;
@@ -107,18 +114,18 @@ SymTable_T SymTable_new(void) {
 
 void SymTable_free(SymTable_T oSymTable) {
    size_t bucket;
-   struct Node *kv;
-   struct Node *nextkv;
+   struct Node *binding;
+   struct Node *nextbinding;
 
    assert (oSymTable != NULL);
 
    for (bucket = 0; bucket < oSymTable->numBuckets; bucket++) {
-      kv = oSymTable->buckets[bucket];
-      while (kv != NULL) {
-         nextkv = kv->next;
-         free(kv->key); /* free defensive copy first */
-         free(kv); /* free each node. */
-         kv = nextkv;
+      binding = oSymTable->buckets[bucket];
+      while (binding != NULL) {
+         nextbinding = binding->next;
+         free(binding->key); /* free defensive copy first */
+         free(binding); /* free each node. */
+         binding = nextbinding;
       }
     }
     free(oSymTable->buckets); /* free symtable pointer to a pointer */
@@ -140,6 +147,7 @@ int SymTable_put(SymTable_T oSymTable, const char *pcKey,
    assert (pcKey != NULL);
    assert (pvValue != NULL);
 
+   if (SymTable_contains(oSymTable, pcKey) == 1) return 0;
 
    /* Hash Table Expansion */
    currentBucket = oSymTable->numBuckets;
@@ -157,15 +165,15 @@ int SymTable_put(SymTable_T oSymTable, const char *pcKey,
    /* allocate space for node */
    newNode = (struct Node*) calloc(1, sizeof(struct Node));
    if (newNode == NULL) return 0;
-   oSymTable->numNodes += 1; /* increase number of nodes */
 
    /* allocate space for key defensive copy */
    newNode->key = calloc(strlen(pcKey) + 1, sizeof(char));
    if (newNode->key == NULL) {
-     free(newNode);
+    free(newNode);
     return 0;
    }
 
+   oSymTable->numNodes += 1; /* increase number of nodes */
    strcpy(newNode->key, pcKey);
    /* assign given value to new node */
    newNode->value = (void *)pvValue; 
@@ -184,79 +192,88 @@ int SymTable_put(SymTable_T oSymTable, const char *pcKey,
 void *SymTable_replace(SymTable_T oSymTable, const char *pcKey,
  const void *pvValue) {
    size_t bucket;
-   struct Node *kv;
-   void *oldValue;
+   struct Node *binding;
+   const void *oldValue;
 
 	assert (oSymTable != NULL);
    assert (pcKey != NULL);
-   assert (pvValue != NULL);
+   /* assert (pvValue != NULL); */
 
    bucket = SymTable_hash(pcKey, auBucketCounts[oSymTable->numBuckets]);
-   kv = oSymTable->buckets[bucket];
-      while (kv != NULL) {
-         if (strcmp(kv->key, pcKey) == 0) {
-            oldValue = kv->value;
-            kv->value = (void *)pvValue;
-            return oldValue;
+   binding = oSymTable->buckets[bucket];
+      while (binding != NULL) {
+         if (strcmp(binding->key, pcKey) == 0) {
+            oldValue = binding->value;
+            binding->value = (void *)pvValue;
+            return (void *)oldValue;
          }
-      kv = kv->next;
+      binding = binding->next;
       }
   return NULL;
  }
   
 int SymTable_contains(SymTable_T oSymTable, const char *pcKey) {
-   struct Node *kv;
+   struct Node *binding;
    size_t bucket;
 
 	assert (oSymTable != NULL);
    assert (pcKey != NULL);
 
    bucket = SymTable_hash(pcKey, auBucketCounts[oSymTable->numBuckets]);
-   kv = oSymTable->buckets[bucket];
+   binding = oSymTable->buckets[bucket];
    
-   while (kv != NULL) {
-         if (strcmp(kv->key, pcKey) == 0) return 1;
-         kv = kv->next;
+   while (binding != NULL) {
+         if (strcmp(binding->key, pcKey) == 0) return 1;
+         binding = binding->next;
       }
   return 0;
   }
 
 void *SymTable_get(SymTable_T oSymTable, const char *pcKey) {
-   struct Node *kv;
+   struct Node *binding;
    size_t bucket;
 
 	assert (oSymTable != NULL);
    assert (pcKey != NULL);
 
    bucket = SymTable_hash(pcKey, auBucketCounts[oSymTable->numBuckets]);
-   kv = oSymTable->buckets[bucket];
+   binding = oSymTable->buckets[bucket];
    
-   while (kv != NULL) {
-      if (strcmp(kv->key, pcKey) == 0) return kv->value;
-      kv = kv->next;
+   while (binding != NULL) {
+      if (strcmp(binding->key, pcKey) == 0) return binding->value;
+      binding = binding->next;
   }
   return NULL;
   }
 
 void *SymTable_remove(SymTable_T oSymTable, const char *pcKey) {
-   struct Node *kv;
+   struct Node *binding;
    size_t bucket;
+   struct Node *previous;
    void *oldValue;
 
 	assert (oSymTable != NULL);
    assert (pcKey != NULL);
 
    bucket = SymTable_hash(pcKey, auBucketCounts[oSymTable->numBuckets]);
-   kv = oSymTable->buckets[bucket];
-   while (kv != NULL) {
-      if (strcmp(kv->key, pcKey) == 0) {
-         oldValue = kv->value;
-         free(kv);
-         oSymTable->numNodes -= 1;
-         return oldValue;
-      }
-      kv = kv->next;
-      }
+   binding = oSymTable->buckets[bucket];
+   previous = NULL;
+
+   while (binding != NULL) {
+    if (strcmp(binding->key, pcKey) == 0) {
+      oldValue = binding->value;
+
+      if (previous == NULL) oSymTable->buckets[bucket] = binding->next;
+      else previous->next = binding->next;
+
+      free(binding->key); /* free defensive copy first */
+      free(binding);
+      oSymTable->numNodes -= 1;
+      return (void *) oldValue;
+    }
+    previous = binding;
+    binding = binding->next;    
+  }
   return NULL;
   }
 
