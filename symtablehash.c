@@ -61,15 +61,12 @@ void rehash(SymTable_T oSymTable, size_t uBucketCount) {
    struct Node **newBuckets;
 
    assert (oSymTable != NULL);
-   /* assert (uBucketCount != NULL); */
 
-   /* allocate memory for buckets array, starting at uBucketCount 
-    buckets at the size of a pointer of a struct.*/
+   /* allocate memory for buckets array.*/
    newBuckets = calloc(uBucketCount, sizeof(*oSymTable->buckets));
-   /* exit function if allocation failure */
-   if (newBuckets == NULL) return; 
+   if (newBuckets == NULL) return; /* exit if allocation failure */
 
-   for (i = 0; i < uBucketCount; i++) {
+   for (i = 0; i < auBucketCounts[oSymTable->numBuckets]; i++) {
       binding = oSymTable->buckets[i];
       while (binding != NULL) {
          /* Store the hash code */
@@ -86,6 +83,7 @@ void rehash(SymTable_T oSymTable, size_t uBucketCount) {
    }
    free(oSymTable->buckets);
    oSymTable->buckets = newBuckets;
+   oSymTable->numBuckets++; 
 }
 
 SymTable_T SymTable_new(void) {
@@ -152,8 +150,7 @@ int SymTable_put(SymTable_T oSymTable, const char *pcKey,
       /* make sure we are not at maximum number of buckets (65521) */
       if (currentBucketIndex < (numBucketIncrements - 1)) { 
         /* move to the next element in the array */
-        oSymTable->numBuckets++; 
-        rehash(oSymTable, auBucketCounts[oSymTable->numBuckets]);
+        rehash(oSymTable, auBucketCounts[oSymTable->numBuckets + 1]);
       }
    }
 
