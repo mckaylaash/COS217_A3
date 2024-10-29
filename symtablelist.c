@@ -24,6 +24,7 @@ SymTable_T SymTable_new(void) {
   oSymTable = calloc(1, sizeof(*oSymTable)); 
   if (oSymTable == NULL) return NULL;
   oSymTable->numNodes = 0;
+  oSymTable->first = NULL;
   return oSymTable;
  }    
 
