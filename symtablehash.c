@@ -48,12 +48,11 @@ static size_t SymTable_hash(const char *pcKey, size_t uBucketCount)
    return uHash % uBucketCount;
 }
       
-
 /* Takes a SymTable object oSymTable and the number of buckets in the 
 SymTable, a size_t object uBucketCount, as input. Repositions all 
 bindings in the given oSymTable according to hash codes between 0 and 
 uBucketCount - 1. Does not return any values. */
-void rehash(SymTable_T oSymTable, size_t uBucketCount) {
+static void rehash(SymTable_T oSymTable, size_t uBucketCount) {
    size_t i;
    size_t bucket;
    struct Node *binding;
