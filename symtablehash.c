@@ -161,6 +161,7 @@ int SymTable_put(SymTable_T oSymTable, const char *pcKey,
       }
    }
 */
+
    /* allocate space for node */
    newNode = (struct Node*) calloc(1, sizeof(struct Node));
    if (newNode == NULL) return 0;
