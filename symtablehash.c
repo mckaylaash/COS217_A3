@@ -240,7 +240,7 @@ void *SymTable_get(SymTable_T oSymTable, const char *pcKey) {
    binding = oSymTable->buckets[bucket];
    
    while (binding != NULL) {
-      if (strcmp(binding->key, pcKey) == 0) return binding->value;
+      if (strcmp(binding->key, pcKey) == 0) return (void *)binding->value;
       binding = binding->next;
   }
   return NULL;
@@ -250,7 +250,7 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey) {
    struct Node *binding;
    size_t bucket;
    struct Node *previous;
-   void *oldValue;
+   const void *oldValue;
 
 	assert (oSymTable != NULL);
    assert (pcKey != NULL);
