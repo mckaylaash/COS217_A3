@@ -53,10 +53,11 @@ const void *pvValue) {
   assert (pcKey != NULL);
   assert (pvValue != NULL);
 
+  if (SymTable_contains(oSymTable, pcKey) == 1) return 0;
+
   /* allocate space for node */
   newNode = (struct Node*) calloc(1, sizeof(struct Node));
   if (newNode == NULL) return 0;
-  oSymTable->numNodes += 1; /* increase number of nodes */
 
   /* allocate space for key defensive copy */
   newNode->key = calloc(strlen(pcKey) + 1, sizeof(char));
@@ -64,6 +65,8 @@ const void *pvValue) {
     free(newNode);
     return 0;
   }
+
+  oSymTable->numNodes += 1; /* increase number of nodes */
   strcpy(newNode->key, pcKey); 
   newNode->value = (void *)pvValue; /* assign given value to new node */
   newNode->next = oSymTable->first; /* bindings are placed in front */
