@@ -125,20 +125,28 @@ oSymTable unchanges and returns NULL. */
 void *SymTable_remove(SymTable_T oSymTable, const char *pcKey) {  
   struct Node *kv;
   struct Node *nextkv;
+  struct Node *previous;
   void *oldValue;
 
 	assert (oSymTable != NULL);
   assert (pcKey != NULL);
 
+  previous = NULL;
+
  for (kv = oSymTable->first; kv != NULL; kv = nextkv) {
     nextkv = kv->next;
+    
     if (strcmp(kv->key, pcKey) == 0) {
       oldValue = kv->value;
+      if (kv == oSymTable->first) oSymTable->first = kv->next;
+      else previous->next = kv->next;
+
       free(kv->key); /* free defensive copy first */
       free(kv);
       oSymTable->numNodes -= 1;
       return oldValue;
     }
+    previous = kv;
   }
   return NULL;
 }
