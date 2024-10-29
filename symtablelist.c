@@ -10,16 +10,22 @@ SymTable Abstract Data Type Linked List Implementation                          
 #include <string.h>
 #include <assert.h> /* for assert */
 
+/* An object that stores the key value pairs in the SymTable.*/
 struct Node {
-  char *key; /* defensive copy of key (string) */ 
-  const void *value; /* void pointer to a value (generic) */
-  struct Node *next; /* pointer to next node in list */
+  /* defensive copy of key (string) */ 
+  char *key; 
+  /* void pointer to a value (generic) */
+  const void *value; 
+   /* pointer to next node in list */
+  struct Node *next;
 };
 
-/* single linked list)*/
+/* A single linked list storing Nodes. */
 struct SymTable {
-  struct Node *first; /* pointer to first node */
-  size_t numNodes; /* number of nodes in the SymTable */
+  /* pointer to first node */
+  struct Node *first; 
+   /* number of nodes in the SymTable */
+  size_t numNodes;
 };
 
 /* no parameters, return a new SymTable object with no bindings */
@@ -34,14 +40,14 @@ SymTable_T SymTable_new(void) {
  }    
 
 void SymTable_free(SymTable_T oSymTable) {
-  struct Node *kv;
-  struct Node *nextkv;    
+  struct Node *binding;
+  struct Node *nextbinding;    
   assert (oSymTable != NULL);
 
-  for (kv = oSymTable->first; kv != NULL; kv = nextkv) {
-    nextkv = kv->next;
-    free(kv->key); /* free defensive copy first */
-    free(kv); /* free each node. */
+  for (binding = oSymTable->first; binding != NULL; binding = nextbinding) {
+    nextbinding = binding->next;
+    free(binding->key); /* free defensive copy first */
+    free(binding); /* free each node. */
   }
   free(oSymTable); /* free symtable itself. */
 }
@@ -83,17 +89,17 @@ const void *pvValue) {
 
 void *SymTable_replace(SymTable_T oSymTable, const char *pcKey, 
 const void *pvValue) {
-  struct Node *kv;
+  struct Node *binding;
   const void *oldValue;
 
 	assert (oSymTable != NULL);
   assert (pcKey != NULL);
   /* assert (pvValue != NULL); */
 
-  for (kv = oSymTable->first; kv != NULL; kv = kv->next) {
-    if (strcmp(kv->key, pcKey) == 0) {
-      oldValue = kv->value;
-      kv->value = (void *)pvValue;
+  for (binding = oSymTable->first; binding != NULL; binding = binding->next) {
+    if (strcmp(binding->key, pcKey) == 0) {
+      oldValue = binding->value;
+      binding->value = (void *)pvValue;
       return (void *)oldValue;
     }
   }
@@ -101,25 +107,25 @@ const void *pvValue) {
 }
 
 int SymTable_contains(SymTable_T oSymTable, const char *pcKey) {
-  struct Node *kv;
+  struct Node *binding;
 
 	assert (oSymTable != NULL);
   assert (pcKey != NULL);
 
-  for (kv = oSymTable->first; kv != NULL; kv = kv->next) {
-    if (strcmp(kv->key, pcKey) == 0) return 1;
+  for (binding = oSymTable->first; binding != NULL; binding = binding->next) {
+    if (strcmp(binding->key, pcKey) == 0) return 1;
   }
   return 0;
 }
 
 void *SymTable_get(SymTable_T oSymTable, const char *pcKey) {
-  struct Node *kv;
+  struct Node *binding;
 
 	assert (oSymTable != NULL);
   assert (pcKey != NULL);
 
-  for (kv = oSymTable->first; kv != NULL; kv = kv->next) {
-    if (strcmp(kv->key, pcKey) == 0) return (void *) kv->value;
+  for (binding = oSymTable->first; binding != NULL; binding = binding->next) {
+    if (strcmp(binding->key, pcKey) == 0) return (void *) binding->value;
   }
   return NULL;
 }
@@ -128,8 +134,8 @@ void *SymTable_get(SymTable_T oSymTable, const char *pcKey) {
 from oSymTable and returns the binding’s value. Otherwise, leave 
 oSymTable unchanges and returns NULL. */
 void *SymTable_remove(SymTable_T oSymTable, const char *pcKey) {  
-  struct Node *kv;
-  struct Node *nextkv;
+  struct Node *binding;
+  struct Node *nextbinding;
   struct Node *previous;
   const void *oldValue;
 
@@ -138,20 +144,20 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey) {
 
   previous = NULL;
 
- for (kv = oSymTable->first; kv != NULL; kv = nextkv) {    
-    if (strcmp(kv->key, pcKey) == 0) {
-      oldValue = kv->value;
+ for (binding = oSymTable->first; binding != NULL; binding = nextbinding) {    
+    if (strcmp(binding->key, pcKey) == 0) {
+      oldValue = binding->value;
 
-      if (previous == NULL) oSymTable->first = kv->next;
-      else previous->next = kv->next;
+      if (previous == NULL) oSymTable->first = binding->next;
+      else previous->next = binding->next;
 
-      free(kv->key); /* free defensive copy first */
-      free(kv);
+      free(binding->key); /* free defensive copy first */
+      free(binding);
       oSymTable->numNodes -= 1;
       return (void *) oldValue;
     }
-    previous = kv;
-    nextkv = kv->next;
+    previous = binding;
+    nextbinding = binding->next;
   }
   return NULL;
 }
