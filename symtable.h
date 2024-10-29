@@ -8,8 +8,6 @@ SymTable Abstract Data Type Interface                                           
 #define SYMTABLE_H
 
 #include <stddef.h>
-/* Declaring the SymTable object. */
-/* struct SymTable; */
 
 /* A SymTable is a last-in-first-out collection of bindings, where each
 binding contains a key and a value pair. */
