@@ -124,14 +124,17 @@ from oSymTable and returns the binding’s value. Otherwise, leave
 oSymTable unchanges and returns NULL. */
 void *SymTable_remove(SymTable_T oSymTable, const char *pcKey) {  
   struct Node *kv;
+  struct Node *nextkv;
   void *oldValue;
 
 	assert (oSymTable != NULL);
   assert (pcKey != NULL);
 
-  for (kv = oSymTable->first; kv != NULL; kv = kv->next) {
+ for (kv = oSymTable->first; kv != NULL; kv = nextkv) {
+    nextkv = kv->next;
     if (strcmp(kv->key, pcKey) == 0) {
       oldValue = kv->value;
+      free(kv->key); /* free defensive copy first */
       free(kv);
       oSymTable->numNodes -= 1;
       return oldValue;
