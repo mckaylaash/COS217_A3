@@ -286,7 +286,7 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey) {
       assert (oSymTable != NULL);
       assert (pfApply != NULL);
 
-      for (bucket = 0; bucket < oSymTable->numBuckets; bucket++) {
+      for (bucket = 0; bucket < auBucketCounts[oSymTable->numBuckets]; bucket++) {
          for (psCurrentNode = oSymTable->buckets[bucket];
          psCurrentNode != NULL;
          psCurrentNode = psCurrentNode->next)
