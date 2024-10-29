@@ -148,18 +148,19 @@ int SymTable_put(SymTable_T oSymTable, const char *pcKey,
 
    if (SymTable_contains(oSymTable, pcKey) == 1) return 0;
 
+
    /* Hash Table Expansion */
-   currentBucketIndex = oSymTable->numBuckets;
+ /*  currentBucketIndex = oSymTable->numBuckets;
    /* checks if the number of nodes equals or exceeds the current number 
    of buckets. if so, proceeds with execution. */
-   if (oSymTable->numNodes >= auBucketCounts[currentBucketIndex]) {
+ /*  if (oSymTable->numNodes >= auBucketCounts[currentBucketIndex]) {
       /* make sure we are not at maximum number of buckets (65521) */
-      if (currentBucketIndex < (numBucketIncrements - 1)) { 
+ /*     if (currentBucketIndex < (numBucketIncrements - 1)) { 
         /* move to the next element in the array */
-        symtablehash_rehash(oSymTable, auBucketCounts[oSymTable->numBuckets + 1]);
+ /*      symtablehash_rehash(oSymTable, auBucketCounts[oSymTable->numBuckets + 1]);
       }
    }
-
+*/
    /* allocate space for node */
    newNode = (struct Node*) calloc(1, sizeof(struct Node));
    if (newNode == NULL) return 0;
