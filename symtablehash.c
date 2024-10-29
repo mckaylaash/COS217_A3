@@ -269,10 +269,12 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey) {
       assert (oSymTable != NULL);
       assert (pfApply != NULL);
 
-      for (psCurrentNode = )
-
-
-      
-     }
+      for (bucket = 0; bucket < oSymTable->numBuckets; bucket++) {
+         for (psCurrentNode = oSymTable->buckets[bucket];
+         psCurrentNode != NULL;
+         psCurrentNode = psCurrentNode->next)
+        (*pfApply)((char*)psCurrentNode->key, (void*)psCurrentNode->value, (void*)pvExtra);
+      }
+   }
 
     
