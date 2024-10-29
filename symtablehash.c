@@ -69,10 +69,12 @@ void rehash(SymTable_T oSymTable, size_t uBucketCount) {
    /* exit function if allocation failure */
    if (newBuckets == NULL) return; 
 
-   for (i = 0; i < oSymTable->numBuckets; i++) {
+
+   for (i = 0; i < auBucketCounts[oSymTable->numBuckets]; i++) {
       binding = oSymTable->buckets[i];
       while (binding != NULL) {
-         bucket = SymTable_hash(binding->key, uBucketCount); /* hash code */
+         /* Store the hash code */
+         bucket = SymTable_hash(binding->key, uBucketCount); 
          nextbinding = binding->next;
 
          /* bindings are placed in front */
@@ -88,7 +90,7 @@ void rehash(SymTable_T oSymTable, size_t uBucketCount) {
       }
    }
    oSymTable->buckets = newBuckets;
-   oSymTable->numBuckets = uBucketCount;
+   oSymTable->numBuckets++;
 }
 
 SymTable_T SymTable_new(void) {
