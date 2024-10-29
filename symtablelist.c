@@ -143,7 +143,7 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey) {
      const void *pvExtra) {
       struct Node *psCurrentNode;
       assert (oSymTable != NULL);
-      assert(pfApply != NULL);
+      assert (pfApply != NULL);
 
       for (psCurrentNode = oSymTable->first;
         psCurrentNode != NULL;
