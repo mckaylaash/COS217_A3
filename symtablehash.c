@@ -81,13 +81,10 @@ void rehash(SymTable_T oSymTable, size_t uBucketCount) {
 
          /* first node becomes the new node */
          newBuckets[bucket] = binding; 
-
-         free(binding->key); /* free defensive copy first */
-         free(binding); /* free each node. */
-
          binding = nextbinding;
       }
    }
+   free(oSymTable->buckets);
    oSymTable->buckets = newBuckets;
 }
 
@@ -238,7 +235,8 @@ void *SymTable_get(SymTable_T oSymTable, const char *pcKey) {
    binding = oSymTable->buckets[bucket];
    
    while (binding != NULL) {
-      if (strcmp(binding->key, pcKey) == 0) return (void *)binding->value;
+      if (strcmp(binding->key, pcKey) == 0) 
+         return (void *)binding->value;
       binding = binding->next;
   }
   return NULL;
