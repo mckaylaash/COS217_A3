@@ -51,7 +51,7 @@ const void *pvValue) {
 
   assert (oSymTable != NULL);
   assert (pcKey != NULL);
-  assert (pvValue != NULL);
+  /* assert (pvValue != NULL); */
 
   if (SymTable_contains(oSymTable, pcKey) == 1) return 0;
 
