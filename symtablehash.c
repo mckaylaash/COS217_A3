@@ -140,7 +140,6 @@ int SymTable_put(SymTable_T oSymTable, const char *pcKey,
    assert (pcKey != NULL);
    assert (pvValue != NULL);
 
-  if (SymTable_contains(oSymTable, pcKey) == 1) return 0;
 
    /* Hash Table Expansion */
    currentBucket = oSymTable->numBuckets;

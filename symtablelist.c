@@ -3,11 +3,9 @@
 #include <string.h>
 #include <assert.h> /* for assert */
 
-
-
 struct Node {
   char *key; /* defensive copy of key (string) */ 
-  void *value; /* void pointer to a value (generic) */
+  const void *value; /* void pointer to a value (generic) */
   struct Node *next; /* pointer to next node in list */
 };
 
@@ -89,7 +87,7 @@ const void *pvValue) {
     if (strcmp(kv->key, pcKey) == 0) {
       oldValue = kv->value;
       kv->value = (void *)pvValue;
-      return oldValue;
+      return (void *)oldValue;
     }
   }
   return NULL;
@@ -126,27 +124,28 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey) {
   struct Node *kv;
   struct Node *nextkv;
   struct Node *previous;
-  void *oldValue;
+  const void *oldValue;
 
 	assert (oSymTable != NULL);
   assert (pcKey != NULL);
+  // assert (oSymTable->fir)
 
   previous = NULL;
 
- for (kv = oSymTable->first; kv != NULL; kv = nextkv) {
-    nextkv = kv->next;
-    
+ for (kv = oSymTable->first; kv != NULL; kv = nextkv) {    
     if (strcmp(kv->key, pcKey) == 0) {
       oldValue = kv->value;
-      if (kv == oSymTable->first) oSymTable->first = kv->next;
+
+      if (previous == NULL) oSymTable->first = kv->next;
       else previous->next = kv->next;
 
       free(kv->key); /* free defensive copy first */
       free(kv);
       oSymTable->numNodes -= 1;
-      return oldValue;
+      return (void *) oldValue;
     }
     previous = kv;
+    nextkv = kv->next;
   }
   return NULL;
 }
