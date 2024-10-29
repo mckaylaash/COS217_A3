@@ -60,7 +60,7 @@ static size_t SymTable_hash(const char *pcKey, size_t uBucketCount)
 /* Rehashes all bindings in oSymTable to a new table with uBucketCount 
 buckets. Takes a SymTable object oSymTable and the new bucket count 
 size_t uBucketCount, as input. Does not return any values. */
-static void rehash(SymTable_T oSymTable, size_t uBucketCount) {
+static void symtablehash_rehash(SymTable_T oSymTable, size_t uBucketCount) {
    size_t i;
    size_t bucket;
    struct Node *binding;
@@ -156,7 +156,7 @@ int SymTable_put(SymTable_T oSymTable, const char *pcKey,
       /* make sure we are not at maximum number of buckets (65521) */
       if (currentBucketIndex < (numBucketIncrements - 1)) { 
         /* move to the next element in the array */
-        rehash(oSymTable, auBucketCounts[oSymTable->numBuckets + 1]);
+        symtablehash_rehash(oSymTable, auBucketCounts[oSymTable->numBuckets + 1]);
       }
    }
 
