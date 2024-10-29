@@ -77,7 +77,7 @@ const void *pvValue) {
 void *SymTable_replace(SymTable_T oSymTable, const char *pcKey, 
 const void *pvValue) {
   struct Node *kv;
-  void *oldValue;
+  const void *oldValue;
 
 	assert (oSymTable != NULL);
   assert (pcKey != NULL);
@@ -128,7 +128,6 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey) {
 
 	assert (oSymTable != NULL);
   assert (pcKey != NULL);
-  // assert (oSymTable->fir)
 
   previous = NULL;
 
