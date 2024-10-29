@@ -105,7 +105,6 @@ SymTable_T SymTable_new(void) {
 
     if (oSymTable->buckets == NULL) return NULL;
 
-    oSymTable->numBuckets = auBucketCounts[0];
     oSymTable->numNodes = 0;
     oSymTable->numBuckets = 0;
 
