@@ -5,7 +5,7 @@
 #include <assert.h> /* for assert */
 
 struct Node {
-    const char *key; /* Pointer to a key (string) */ 
+    char *key; /* Pointer to a key (string) */ 
     void *value; /* Void pointer to a value (generic) */
     struct Node *next; /* Pointer to next node in list */
 };
@@ -53,7 +53,7 @@ void rehash(SymTable_T oSymTable, size_t uBucketCount) {
    struct Node **newBuckets;
 
    assert (oSymTable != NULL);
-   assert (uBucketCount != NULL);
+   /* assert (uBucketCount != NULL); */
 
    /* allocate memory for buckets array, starting at uBucketCount 
     buckets at the size of a pointer of a struct.*/
