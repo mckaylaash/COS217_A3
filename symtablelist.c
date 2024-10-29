@@ -1,3 +1,10 @@
+/*--------------------------------------------------------------------*/
+/* symtablelist.c                                                              */
+/* Author: Mckayla Ashley  
+
+SymTable Abstract Data Type Linked List Implementation                                               */
+/*--------------------------------------------------------------------*/
+
 #include "symtable.h"
 #include <stdlib.h> /* for malloc, calloc, free */
 #include <string.h>
