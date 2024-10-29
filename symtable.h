@@ -8,9 +8,9 @@ SymTable Abstract Data Type Interface                                           
 #ifndef SYMTABLE_H
 #define SYMTABLE_H
 
-/* declaring the SymTable object and defining a SymTable_T as a pointer
-to a SymTable. */
+/* Declaring the SymTable object. */
 struct SymTable;
+/* Defining a SymTable_T as a pointer to a SymTable. */
 typedef struct SymTable *SymTable_T; 
 /*--------------------------------------------------------------------*/
 
