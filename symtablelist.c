@@ -112,7 +112,7 @@ void *SymTable_get(SymTable_T oSymTable, const char *pcKey) {
   assert (pcKey != NULL);
 
   for (kv = oSymTable->first; kv != NULL; kv = kv->next) {
-    if (strcmp(kv->key, pcKey) == 0) return kv->value;
+    if (strcmp(kv->key, pcKey) == 0) return (void *) kv->value;
   }
   return NULL;
 }
