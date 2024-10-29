@@ -1,16 +1,18 @@
 /*--------------------------------------------------------------------*/
-/* symtable.h                                                              */
+/* symtable.h                                                         */
 /* Author: Mckayla Ashley  
 
 SymTable Abstract Data Type Interface                                               */
 /*--------------------------------------------------------------------*/
-#include <stddef.h>
 #ifndef SYMTABLE_H
 #define SYMTABLE_H
 
+#include <stddef.h>
 /* Declaring the SymTable object. */
-struct SymTable;
-/* Defining a SymTable_T as a pointer to a SymTable. */
+/* struct SymTable; */
+
+/* A SymTable is a last-in-first-out collection of bindings, where each
+binding contains a key and a value pair. */
 typedef struct SymTable *SymTable_T; 
 /*--------------------------------------------------------------------*/
 

@@ -6,32 +6,32 @@ SymTable Abstract Data Type Linked List Implementation                          
 /*--------------------------------------------------------------------*/
 
 #include "symtable.h"
-#include <stdlib.h> /* for malloc, calloc, free */
+#include <assert.h> 
+#include <stdlib.h> 
 #include <string.h>
-#include <assert.h> /* for assert */
 
-/* An object that stores the key value pairs in the SymTable.*/
+/* Each binding, or key-value pair, is stored in a Node.  Nodes are 
+linked to form a list.  */
 struct Node {
-  /* defensive copy of key (string) */ 
+  /* The Key. */ 
   char *key; 
-  /* void pointer to a value (generic) */
+  /* The Item. */
   const void *value; 
-   /* pointer to next node in list */
+  /* The address of the next StackNode. */
   struct Node *next;
 };
 
-/* A single linked list storing Nodes. */
+/* A SymTable is a "dummy" node that points to the first Node in the 
+linked list. It keeps track of the number of Nodes in the table. */
 struct SymTable {
-  /* pointer to first node */
+  /* The address of the first StackNode. */
   struct Node *first; 
-   /* number of nodes in the SymTable */
+    /* Number of key-value pairs in table. */
   size_t numNodes;
 };
 
-/* no parameters, return a new SymTable object with no bindings */
 SymTable_T SymTable_new(void) {
-    /* declared SymTable_T as a pointer to SymTable in the header file. */
-  SymTable_T oSymTable; /* oSymTable is now a pointer to SymTable. */
+  SymTable_T oSymTable; 
   oSymTable = calloc(1, sizeof(*oSymTable)); 
   if (oSymTable == NULL) return NULL;
   oSymTable->numNodes = 0;
@@ -54,7 +54,7 @@ void SymTable_free(SymTable_T oSymTable) {
 
 size_t SymTable_getLength(SymTable_T oSymTable) {
 	assert (oSymTable != NULL);
-  return oSymTable->numNodes; /* must run in constant time */
+  return oSymTable->numNodes; 
 }
 
 int SymTable_put(SymTable_T oSymTable, const char *pcKey, 
@@ -63,7 +63,6 @@ const void *pvValue) {
 
   assert (oSymTable != NULL);
   assert (pcKey != NULL);
-  /* assert (pvValue != NULL); */
 
   if (SymTable_contains(oSymTable, pcKey) == 1) return 0;
 
@@ -94,7 +93,6 @@ const void *pvValue) {
 
 	assert (oSymTable != NULL);
   assert (pcKey != NULL);
-  /* assert (pvValue != NULL); */
 
   for (binding = oSymTable->first; binding != NULL; binding = binding->next) {
     if (strcmp(binding->key, pcKey) == 0) {
@@ -130,9 +128,6 @@ void *SymTable_get(SymTable_T oSymTable, const char *pcKey) {
   return NULL;
 }
 
-/* If oSymTable contains a binding with key pcKey, removes the binding 
-from oSymTable and returns the binding’s value. Otherwise, leave 
-oSymTable unchanges and returns NULL. */
 void *SymTable_remove(SymTable_T oSymTable, const char *pcKey) {  
   struct Node *binding;
   struct Node *nextbinding;
@@ -173,7 +168,8 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey) {
       for (psCurrentNode = oSymTable->first;
         psCurrentNode != NULL;
         psCurrentNode = psCurrentNode->next)
-        (*pfApply)((char*)psCurrentNode->key, (void*)psCurrentNode->value, (void*)pvExtra);
+        (*pfApply)((char*)psCurrentNode->key, 
+        (void*)psCurrentNode->value, (void*)pvExtra);
 }
 
 

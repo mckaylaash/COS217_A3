@@ -1,29 +1,14 @@
+/*--------------------------------------------------------------------*/
+/* symtablehash.c                                                              */
+/* Author: Mckayla Ashley  
+
+SymTable Abstract Data Type Hash Table Implementation                                               */
+/*--------------------------------------------------------------------*/
 
 #include "symtable.h"
-#include <stdlib.h> /* for malloc, calloc, free */
+#include <stdlib.h> 
 #include <string.h>
-#include <assert.h> /* for assert */
-
-/* An object that stores the key value pairs in the SymTable.*/
-struct Node {
-   /* Pointer to a key (string) */ 
-    char *key; 
-   /* Void pointer to a value (generic) */
-    const void *value; 
-   /* Pointer to next node in list */
-    struct Node *next;
-};
-
-/* A Hash Table implementation of a Symbol Table containing a 
-struct Node **buckets, size_t numBuckets, and size_t numNodes. */
-struct SymTable { /* manager */
-   /*  Buckets is an array full of pointers to nodes */
-    struct Node **buckets; 
-    /* Number of buckets in the hash table */
-    size_t numBuckets; 
-    /* Number of key-value pairs in table*/
-    size_t numNodes; 
-};
+#include <assert.h>
 
 /* Array of bucket counts used in hash table expansion  */
 static const size_t auBucketCounts[] = { 509, 1021, 2039, 4093, 8191, 
@@ -31,6 +16,30 @@ static const size_t auBucketCounts[] = { 509, 1021, 2039, 4093, 8191,
 /* Stores the size of the auBucketCounts array. */
 static const size_t numBucketIncrements = sizeof(auBucketCounts) / 
                      sizeof(auBucketCounts[0]);
+
+/* Each binding (key value pair) is stored in a Node.  Nodes are linked 
+to form a list.  */
+struct Node {
+   /* The Key. */ 
+    char *key; 
+  /* The Item. */
+    const void *value; 
+   /* The address of the next StackNode. */
+   struct Node *next;
+};
+
+/* A SymTable is a Hash Table where each bucket can store a linked list 
+starting with a dummy node. It stores an array of pointers to the head 
+of each buckets linked list and tracks the total number of Nodes and 
+buckets in the table.*/
+struct SymTable { 
+   /*  Buckets is an array full of pointers to nodes */
+    struct Node **buckets; 
+    /* Number of buckets in the hash table. */
+    size_t numBuckets; 
+    /* Number of key-value pairs in table. */
+    size_t numNodes; 
+};
 
 /* Return a hash code for pcKey that is between 0 and uBucketCount-1,
    inclusive. */
@@ -48,10 +57,9 @@ static size_t SymTable_hash(const char *pcKey, size_t uBucketCount)
    return uHash % uBucketCount;
 }
       
-/* Takes a SymTable object oSymTable and the number of buckets in the 
-SymTable, a size_t object uBucketCount, as input. Repositions all 
-bindings in the given oSymTable according to hash codes between 0 and 
-uBucketCount - 1. Does not return any values. */
+/* Rehashes all bindings in oSymTable to a new table with uBucketCount 
+buckets. Takes a SymTable object oSymTable and the new bucket count 
+size_t uBucketCount, as input. Does not return any values. */
 static void rehash(SymTable_T oSymTable, size_t uBucketCount) {
    size_t i;
    size_t bucket;
@@ -68,7 +76,7 @@ static void rehash(SymTable_T oSymTable, size_t uBucketCount) {
    for (i = 0; i < auBucketCounts[oSymTable->numBuckets]; i++) {
       binding = oSymTable->buckets[i];
       while (binding != NULL) {
-         /* Store the hash code */
+         /* store the hash code */
          bucket = SymTable_hash(binding->key, uBucketCount); 
          nextbinding = binding->next;
 
@@ -92,8 +100,7 @@ SymTable_T SymTable_new(void) {
     oSymTable = calloc(1, sizeof(*oSymTable));
     if (oSymTable == NULL) return NULL;
 
-    /* allocate memory for buckets array, starting at 509 buckets at the 
-    size of a pointer of a struct.*/
+    /* allocate memory for buckets array.*/
     oSymTable->buckets = calloc(auBucketCounts[0], 
       sizeof(*oSymTable->buckets));
 
