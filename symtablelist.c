@@ -1,6 +1,6 @@
 #include "symtable.h"
 #include <stdlib.h> /* for malloc, calloc, free */
-#include <stdio.h> /* for printf */
+/* #include <stdio.h> /* for printf */
 #include <string.h>
 #include <assert.h> /* for assert */
 
